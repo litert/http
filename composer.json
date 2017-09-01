@@ -1,0 +1,47 @@
+{
+    "name" : "litert/http",
+    "description" : "A HTTP(S) library for LiteRT.",
+    "type" : "library",
+    "license" : "Apache-2.0",
+    "minimum-stability": "dev",
+    "version": "0.1.0",
+    "autoload" : {
+        "psr-4" : {
+            "L\\Http\\" : "lib"
+        },
+        "files": [
+            "lib/Constants.php"
+        ]
+    },
+    "homepage" : "https://fenying.net",
+    "support" : {
+        "email" : "i.am.x.fenying@gmail.com",
+        "issues" : "https://github.com/litert/http/issues",
+        "source" : "https://github.com/litert/http/"
+    },
+    "repositories" : [{
+        "type" : "git",
+        "url" : "git@github.com:litert/http.git",
+        "name" : "http"
+    }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "litert/core": "^0.1.0@dev"
+    },
+    "authors" : [{
+            "name" : "Angus.Fenying",
+            "email" : "i.am.x.fenying@gmail.com",
+            "homepage" : "https://fenying.net",
+            "role" : "Master"
+        }
+    ],
+    "keywords" : [
+        "http", "https", "protocol", "client"
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    }
+}
