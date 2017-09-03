@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3ff7f8f9eb3edd5fdab7afef4834fb4b",
+    "content-hash": "9a11a0d4854923d1589694f6c756ac2e",
     "packages": [
         {
             "name": "litert/core",
@@ -60,7 +60,7 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": {
         "litert/core": 20
     },
