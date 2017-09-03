@@ -89,12 +89,12 @@ class ClientCURL implements IClient
 
     public function request(string $method, array $params): Response
     {
-        if (!isset($params['url'])) {
+        if (!isset($params[REQ_FIELD_URL])) {
 
             throw new Exception(<<<'ERROR'
 Parameter "url" is required.
 ERROR
-            );
+            , E_LACK_FIELD_URL);
         }
 
         if (empty(AVAILABLE_METHODS[$method])) {
@@ -102,53 +102,58 @@ ERROR
             throw new Exception(<<<ERROR
 Method "{$method}" is not supported, please specify an upper-case method name.
 ERROR
-            );
+            , E_METHOD_UNSUPPORTED);
         }
 
         $ch = curl_init();
 
-        $curlOpts = [
-            CURLOPT_URL => $params['url'],
+        $reqOpts = [
+            CURLOPT_URL => $params[REQ_FIELD_URL],
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER => intval($params['getHeaders'] ?? false),
-            CURLOPT_NOBODY => intval(!($params['getData'] ?? true))
+            CURLOPT_HEADER => intval($params[REQ_FIELD_GET_HEADERS] ?? false),
+            CURLOPT_NOBODY => intval(!($params[REQ_FIELD_GET_DATA] ?? true)),
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1
         ];
 
-        $isHTTPS = substr($params['url'], 0, 5) === 'https';
+        $isHTTPS = substr($params[REQ_FIELD_URL], 0, 5) === 'https';
 
-        if ($isHTTPS && ($params['strictSSL'] ?? $this->strictSSL)) {
+        if ($isHTTPS && ($params[REQ_FIELD_STRICT_SSL] ?? $this->strictSSL)) {
 
-            $curlOpts[CURLOPT_SSL_VERIFYPEER] = true;
-            $curlOpts[CURLOPT_SSL_VERIFYHOST] = 2;
+            $reqOpts[CURLOPT_SSL_VERIFYPEER] = true;
+            $reqOpts[CURLOPT_SSL_VERIFYHOST] = 2;
 
-            if ($caFile = $params['caFile'] ?? $this->caFile) {
+            if ($caFile = $params[REQ_FIELD_CA_FILE] ?? $this->caFile) {
 
-                $curlOpts[CURLOPT_CAINFO] = $caFile;
+                $reqOpts[CURLOPT_CAINFO] = $caFile;
             }
         }
         else {
 
-            $curlOpts[CURLOPT_SSL_VERIFYPEER] = false;
-            $curlOpts[CURLOPT_SSL_VERIFYHOST] = 0;
+            $reqOpts[CURLOPT_SSL_VERIFYPEER] = false;
+            $reqOpts[CURLOPT_SSL_VERIFYHOST] = 0;
         }
 
-        if ($params['headers'] ?? false) {
+        if (is_array($params[REQ_FIELD_HEADERS] ?? false)) {
 
-            $curlOpts[CURLOPT_HTTPHEADER] = array_map(
-                function(string $k, $v) {
-                    return "{$k}: {$v}";
-                },
-                array_keys($params['headers']),
-                array_values($params['headers'])
+            $params[REQ_FIELD_HEADERS] = array_combine(
+                array_map(
+                    'strtolower',
+                    array_keys($params[REQ_FIELD_HEADERS])
+                ),
+                array_values($params[REQ_FIELD_HEADERS])
             );
+        }
+        else {
+
+            $params[REQ_FIELD_HEADERS] = [];
         }
 
         switch (self::METHOD_MAPPING[$method]) {
         case CURLOPT_POST:
-            $curlOpts[CURLOPT_POST] = true;
+            $reqOpts[CURLOPT_POST] = true;
             break;
         case CURLOPT_CUSTOMREQUEST:
-            $curlOpts[CURLOPT_CUSTOMREQUEST] = $method;
+            $reqOpts[CURLOPT_CUSTOMREQUEST] = $method;
             break;
         }
 
@@ -158,15 +163,45 @@ ERROR
              * Only PATCH/POST/PUT methods supports (and requires) "data"
              * parameter.
              */
-            if (empty($params['data'])) {
+            if (empty($params[REQ_FIELD_DATA])) {
 
                 throw new Exception(<<<ERROR
 Parameter "data" is required for method "{$method}".
 ERROR
-                );
+                , E_LACK_FIELD_DATA);
             }
 
-            $curlOpts[CURLOPT_POSTFIELDS] = $params['data'];
+            if (is_array($params[REQ_FIELD_DATA])) {
+
+                switch ($params[REQ_FIELD_DATA_TYPE] ?? false) {
+                case 'json':
+
+                    $dataType = JSON_CONTENT_TYPE;
+                    $params[REQ_FIELD_DATA] = json_encode($params[REQ_FIELD_DATA]);
+                    break;
+
+                case 'form':
+                    $dataType = DEFAULT_DATA_CONTENT_TYPE;
+                    $params[REQ_FIELD_DATA] = http_build_query(
+                        $params[REQ_FIELD_DATA],
+                        '',
+                        '&',
+                        PHP_QUERY_RFC3986
+                    );
+                    break;
+
+                default:
+    
+                    throw new Exception(<<<ERROR
+Unsupported type "{$params[REQ_FIELD_DATA_TYPE]}" of data.
+ERROR
+                    , E_INVALID_DATA_TYPE);
+                }
+
+                $params[REQ_FIELD_HEADERS]['content-type'] = $dataType;
+
+                $reqOpts[CURLOPT_POSTFIELDS] = $params[REQ_FIELD_DATA];
+            }
         }
         else {
 
@@ -177,58 +212,74 @@ ERROR
              */
             if ($method === 'HEAD') {
 
-                $curlOpts[CURLOPT_NOBODY] = 0;
+                $reqOpts[CURLOPT_NOBODY] = 0;
             }
         }
 
-        $data = [];
+        if ($params[REQ_FIELD_HEADERS]) {
 
-        curl_setopt_array($ch, $curlOpts);
-
-        $data['data'] = curl_exec($ch);
-
-        if ($data['data'] === false) {
-
-            throw new Exception(curl_error($ch), curl_errno($ch));
+            $reqOpts[CURLOPT_HTTPHEADER] = array_map(
+                function(string $k, $v) {
+                    return "{$k}: $v";
+                },
+                array_keys($params[REQ_FIELD_HEADERS]),
+                array_values($params[REQ_FIELD_HEADERS])
+            );
         }
 
-        if ($params['getHeaders'] ?? false) {
+        curl_setopt_array($ch, $reqOpts);
+
+        $response = new Response();
+
+        $response->data = curl_exec($ch);
+
+        unset($reqOpts);
+
+        if ($response->data === false) {
+
+            throw new Exception(curl_error($ch), E_REQUEST_FAILURE);
+        }
+
+        if ($params[REQ_FIELD_GET_HEADERS] ?? false) {
 
             $fullHeaderLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 
-            $data['headers'] = explode(HTTP_SEG_SEPARATOR, substr(
-                $data['data'],
+            $response->headers = explode(HTTP_SEG_SEPARATOR, substr(
+                $response->data,
                 0,
                 $fullHeaderLength - 4
             ));
 
-            $data['data'] = substr($data['data'], $fullHeaderLength);
+            if ($params[REQ_FIELD_GET_DATA] ?? false) {
+
+                $response->data = substr($response->data, $fullHeaderLength);
+            }
 
             unset($fullHeaderLength);
 
             list(
 
-                $data['headers'],
-                $data['redirectionHeaders']
+                $response->headers,
+                $response->previousHeaders
 
             ) = HeaderParser::parseCURLHeaders(
-                $data['headers']
+                $response->headers
             );
         }
 
-        if ($params['getProfile'] ?? false) {
+        if ($params[REQ_FIELD_GET_PROFILE] ?? false) {
 
             $info = curl_getinfo($ch);
-            $data['code'] = $info['http_code'];
-            $data['profile'] = $info;
+            $response->code = $info['http_code'];
+            $response->profile = $info;
         }
         else {
 
-            $data['code'] = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $response->code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         }
 
         curl_close($ch);
 
-        return new Response($data);
+        return $response;
     }
 }

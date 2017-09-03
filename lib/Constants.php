@@ -42,6 +42,29 @@ const METHOD_CONTENT_SUPPORTS = [
     'OPTIONS' => false
 ];
 
+const CODE_CONTINUE = 100;
 const CODE_OK = 200;
 const CODE_CREATED = 201;
 const CODE_PARTIAL = 206;
+const CODE_MULTI_CHOICES = 300;
+const CODE_BAD_REQUEST = 400;
+const CODE_INTERNAL_SERVER_ERROR = 500;
+
+const DEFAULT_DATA_CONTENT_TYPE = 'application/x-www-form-urlencoded';
+const JSON_CONTENT_TYPE = 'application/json';
+
+const REQ_FIELD_URL = 'url';
+const REQ_FIELD_HEADERS = 'headers';
+const REQ_FIELD_DATA = 'data';
+const REQ_FIELD_DATA_TYPE = 'dataType';
+const REQ_FIELD_CA_FILE = 'caFile';
+const REQ_FIELD_STRICT_SSL = 'strictSSL';
+const REQ_FIELD_GET_DATA = 'getData';
+const REQ_FIELD_GET_HEADERS = 'getHeaders';
+const REQ_FIELD_GET_PROFILE = 'getProfile';
+
+const E_LACK_FIELD_URL = 0x0001;
+const E_METHOD_UNSUPPORTED = 0x0002;
+const E_LACK_FIELD_DATA = 0x0003;
+const E_INVALID_DATA_TYPE = 0x0004;
+const E_REQUEST_FAILURE = 0x0005;

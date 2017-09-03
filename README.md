@@ -15,6 +15,10 @@ composer require litert/http
 Or just git clone this repository, and put the **lib** directory into you 
 project.
 
+## Document
+
+ - [简体中文版](./docs/zh-CN/index.md).
+
 ## License
 
 This library is published under [Apache-2.0](./LICENSE) license.

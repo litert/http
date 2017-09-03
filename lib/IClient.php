@@ -149,7 +149,7 @@ interface IClient
      *
      *   string url: The URL of target link.
      *
-     *   bool getHeader [optional]: Desires HTTP headers, default: false.
+     *   bool getHeaders [optional]: Desires HTTP headers, default: false.
      *
      *   bool getData [optional]: Desires HTTP body, default: true.
      *

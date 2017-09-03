@@ -1,11 +1,5 @@
 <?php
 declare (strict_types=1);
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2017/9/1
- * Time: 10:22
- */
 
 namespace L\Test;
 
@@ -28,21 +22,18 @@ INFO;
 
         }
 
-        $client = ClientFactory::createCURLClient();
+        $client = ClientFactory::createFileGetClient();
 
-        echo json_encode($client->post([
+        echo json_encode($client->get([
 
-            'url' => 'https://test-paypal.reolink.com/test.php?a=123',
+            'url' => 'https://fenying.net/',
             'getHeaders' => true,
             'getData' => true,
             'getProfile' => false,
             'headers' => [
                 'MY-TEST' => 'hello',
             ],
-            "data" => http_build_query([
-                'a' => 'test',
-                'g' => 1111
-            ])
+            'caFile' => __DIR__ . '/cacert.pem'
 
         ]), JSON_PRETTY_PRINT);
 

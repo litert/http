@@ -43,27 +43,58 @@ class Response
     /**
      * @var array|null
      */
-    public $redirectionHeaders;
+    public $previousHeaders;
 
-    public function __construct(array $resp)
+    /**
+     * Judge if the HTTP status code is 1xx.
+     *
+     * @return bool
+     */
+    public function isMessage(): bool
     {
-        foreach ($resp as $key => $item) {
-            $this->$key = $item;
-        }
+        return $this->code >= CODE_CONTINUE &&
+            $this->code < CODE_OK;
     }
 
-    public function isServerError(): bool
-    {
-        return $this->code >= 500;
-    }
-
-    public function isClientError(): bool
-    {
-        return $this->code >= 400 && $this->code < 500;
-    }
-
+    /**
+     * Judge if the HTTP status code is 2xx.
+     *
+     * @return bool
+     */
     public function isSuccess(): bool
     {
-        return $this->code >= CODE_OK && $this->code < 400;
+        return $this->code >= CODE_OK && $this->code < CODE_BAD_REQUEST;
+    }
+
+    /**
+     * Judge if the HTTP status code is 3xx.
+     *
+     * @return bool
+     */
+    public function isRedirection(): bool
+    {
+        return $this->code >= CODE_BAD_REQUEST &&
+            $this->code < CODE_INTERNAL_SERVER_ERROR;
+    }
+
+    /**
+     * Judge if the HTTP status code is 4xx.
+     *
+     * @return bool
+     */
+    public function isClientError(): bool
+    {
+        return $this->code >= CODE_BAD_REQUEST &&
+            $this->code < CODE_INTERNAL_SERVER_ERROR;
+    }
+
+    /**
+     * Judge if the HTTP status code is 5xx.
+     *
+     * @return bool
+     */
+    public function isServerError(): bool
+    {
+        return $this->code >= CODE_INTERNAL_SERVER_ERROR;
     }
 }
