@@ -32,9 +32,16 @@ class ClientFileGet implements IClient
      */
     public $strictSSL;
 
+    /**
+     * @var bool
+     */
+    public $version;
+
     public function __construct(array $config = [])
     {
         $this->strictSSL = true;
+
+        $this->version = 1.1;
 
         foreach ($config as $key => $value) {
 
@@ -98,10 +105,22 @@ ERROR
         $reqOpts = [
             'http' => [
                 'method' => $method,
-                'ignore_errors' => true,
-                'protocol_version' => 1.1
+                'ignore_errors' => true
             ]
         ];
+
+        switch ($version = $params['version'] ?? $this->version) {
+        case 1.0:
+        case 1.1:
+            $reqOpts['http']['protocol_version'] = $version;
+            break;
+        default:
+
+            throw new Exception(<<<ERROR
+Version "{$version}" of HTTP protocol is not supported yet.
+ERROR
+            , E_VERSION_UNSUPPORTED);
+        }
 
         $isHTTPS = substr($params[REQ_FIELD_URL], 0, 5) === 'https';
 

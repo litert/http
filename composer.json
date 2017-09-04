@@ -4,7 +4,7 @@
     "type" : "library",
     "license" : "Apache-2.0",
     "minimum-stability": "stable",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "autoload" : {
         "psr-4" : {
             "L\\Http\\" : "lib"
@@ -23,19 +23,17 @@
         "type" : "git",
         "url" : "git@github.com:litert/http.git",
         "name" : "http"
-    }
-    ],
+    }],
     "require": {
         "php": ">=7.0.0",
-        "litert/core": "^0.1.0@dev"
+        "litert/core": "^0.1.0"
     },
     "authors" : [{
-            "name" : "Angus.Fenying",
-            "email" : "i.am.x.fenying@gmail.com",
-            "homepage" : "https://fenying.net",
-            "role" : "Master"
-        }
-    ],
+        "name" : "Angus.Fenying",
+        "email" : "i.am.x.fenying@gmail.com",
+        "homepage" : "https://fenying.net",
+        "role" : "Master"
+    }],
     "keywords" : [
         "http", "https", "protocol", "client"
     ],

@@ -53,6 +53,11 @@ public static function createCURLClient(
      * 推荐从 https://curl.haxx.se/ca/cacert.pem 下载。
      */
     string caFile = null;
+
+    /**
+     * 该字段用于设置客户端使用的 HTTP 协议版本，默认是 1.1 版本。
+     */
+    float version = 1.1;
     ```
 
 ### 2.3. 返回值
@@ -94,6 +99,11 @@ public static function createFileGetClient(
      * 推荐从 https://curl.haxx.se/ca/cacert.pem 下载。
      */
     string caFile = null;
+
+    /**
+     * 该字段用于设置客户端使用的 HTTP 协议版本，默认是 1.1 版本。
+     */
+    float version = 1.1;
     ```
 
 ### 3.3. 返回值

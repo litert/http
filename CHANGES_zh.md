@@ -1,5 +1,9 @@
 # Changes Logs
 
+## v0.1.1
+
+- 添加 HTTP 协议版本选择字段 version。
+
 ## v0.1.0
 
 - 解决问题： CURL 发送 HEAD 方法请求时被锁死，需要忽略 HTTP Content 数据。

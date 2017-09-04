@@ -163,6 +163,8 @@ interface IClient
      *
      *   array headers [optional]: The customized headers to send to server.
      *
+     *   float version [optional]: The version of HTTP protocol to use.
+     *
      * @throws \L\Core\Exception
      *
      * @return Response

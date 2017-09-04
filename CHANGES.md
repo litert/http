@@ -1,5 +1,9 @@
 # Changes Logs
 
+## v0.1.1
+
+- Added field **version** for request to select version of HTTP protocol.
+
 ## v0.1.0
 
 - Resolved: CURL get blocked when sending HEAD request.

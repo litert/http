@@ -42,9 +42,16 @@ class ClientCURL implements IClient
      */
     public $strictSSL;
 
+    /**
+     * @var bool
+     */
+    public $version;
+
     public function __construct(array $config = [])
     {
         $this->strictSSL = true;
+
+        $this->version = 1.1;
 
         foreach ($config as $key => $value) {
 
@@ -114,6 +121,21 @@ ERROR
             CURLOPT_NOBODY => intval(!($params[REQ_FIELD_GET_DATA] ?? true)),
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1
         ];
+
+        switch ($version = $params['version'] ?? $this->version) {
+        case 1.0:
+            $reqOpts[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_0;
+            break;
+        case 1.1:
+            $reqOpts[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_1;
+            break;
+        default:
+
+            throw new Exception(<<<ERROR
+Version "{$version}" of HTTP protocol is not supported yet.
+ERROR
+            , E_VERSION_UNSUPPORTED);
+        }
 
         $isHTTPS = substr($params[REQ_FIELD_URL], 0, 5) === 'https';
 
