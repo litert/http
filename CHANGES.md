@@ -2,6 +2,8 @@
 
 ## v0.1.2
 
+- Fixed: Getting invalid respone when the field **getData** is missed in CURL
+client. 
 - Fixed: The default value of field **dataType** in CURL client is missed. 
 
 ## v0.1.1

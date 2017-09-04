@@ -3,6 +3,7 @@
 ## v0.1.2
 
 - 修复 CURL 客户端 dataType 字段默认值缺失的 Bug。
+- 修复 CURL 客户端中 getData 字段缺失时的错误返回。
 
 ## v0.1.1
 

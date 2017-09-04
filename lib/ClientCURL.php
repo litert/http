@@ -276,6 +276,10 @@ ERROR
 
                 $response->data = substr($response->data, $fullHeaderLength);
             }
+            else {
+
+                $response->data = '';
+            }
 
             unset($fullHeaderLength);
 
