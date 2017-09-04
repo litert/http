@@ -1,5 +1,9 @@
 # Changes Logs
 
+## v0.1.4
+
+- 修复 CURL 客户端中当 **data** 字段不是数组时不发送数据的问题。
+
 ## v0.1.3
 
 - 修复 CURL 客户端 dataType 字段默认值。

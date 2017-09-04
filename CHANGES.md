@@ -1,5 +1,9 @@
 # Changes Logs
 
+## v0.1.4
+
+- Fixed: Nothing send when field **data** is a string in CURL client.
+
 ## v0.1.3
 
 - Fixed: Set the default value of field **getData** to be `true`.

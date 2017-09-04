@@ -221,9 +221,9 @@ ERROR
                 }
 
                 $params[REQ_FIELD_HEADERS]['content-type'] = $dataType;
-
-                $reqOpts[CURLOPT_POSTFIELDS] = $params[REQ_FIELD_DATA];
             }
+
+            $reqOpts[CURLOPT_POSTFIELDS] = $params[REQ_FIELD_DATA];
         }
         else {
 
