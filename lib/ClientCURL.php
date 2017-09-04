@@ -272,7 +272,7 @@ ERROR
                 $fullHeaderLength - 4
             ));
 
-            if ($params[REQ_FIELD_GET_DATA] ?? false) {
+            if ($params[REQ_FIELD_GET_DATA] ?? true) {
 
                 $response->data = substr($response->data, $fullHeaderLength);
             }

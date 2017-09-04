@@ -1,5 +1,9 @@
 # Changes Logs
 
+## v0.1.3
+
+- Fixed: Set the default value of field **getData** to be `true`.
+
 ## v0.1.2
 
 - Fixed: Getting invalid respone when the field **getData** is missed in CURL
