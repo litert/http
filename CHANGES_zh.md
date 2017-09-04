@@ -1,5 +1,9 @@
 # Changes Logs
 
+## v0.1.2
+
+- 修复 CURL 客户端 dataType 字段默认值缺失的 Bug。
+
 ## v0.1.1
 
 - 添加 HTTP 协议版本选择字段 version。

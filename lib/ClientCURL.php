@@ -195,7 +195,7 @@ ERROR
 
             if (is_array($params[REQ_FIELD_DATA])) {
 
-                switch ($params[REQ_FIELD_DATA_TYPE] ?? false) {
+                switch ($params[REQ_FIELD_DATA_TYPE] ?? 'form') {
                 case 'json':
 
                     $dataType = JSON_CONTENT_TYPE;

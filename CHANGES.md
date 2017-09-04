@@ -1,5 +1,9 @@
 # Changes Logs
 
+## v0.1.2
+
+- Fixed: The default value of field **dataType** in CURL client is missed. 
+
 ## v0.1.1
 
 - Added field **version** for request to select version of HTTP protocol.
