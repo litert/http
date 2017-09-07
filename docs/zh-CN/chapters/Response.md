@@ -1,4 +1,4 @@
-# Class Response
+# 类 Response
 
 Response 类用于包含一个 HTTP 请求的响应结果。
 

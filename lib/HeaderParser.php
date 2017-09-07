@@ -31,7 +31,7 @@ class HeaderParser
 
             $finalHeader = self::parseHeaderArray(
                 explode(
-                    HTTP_EOL,
+                    PROTOCOL_DELIMITER,
                     array_splice(
                         $headers,
                         -1
@@ -43,7 +43,7 @@ class HeaderParser
 
                 $redirectHeaders[] = self::parseHeaderArray(
                     explode(
-                        HTTP_EOL,
+                        PROTOCOL_DELIMITER,
                         $redirection
                     )
                 );
@@ -53,7 +53,7 @@ class HeaderParser
 
             $finalHeader = self::parseHeaderArray(
                 explode(
-                    HTTP_EOL,
+                    PROTOCOL_DELIMITER,
                     $headers[0]
                 )
             );

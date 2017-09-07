@@ -34,13 +34,13 @@ abstract class AbstractClient implements IClient
 
     public function __construct(array $config = [])
     {
-        $this->strictSSL = $config['strictSSL'] ?? DEFAULT_STRICT_SSL;
+        $this->strictSSL = $config[REQ_FIELD_STRICT_SSL] ?? DEFAULT_STRICT_SSL;
 
-        $this->version = $config['version'] ?? DEFAULT_VERSION;
+        $this->version = $config[REQ_FIELD_VERSION] ?? DEFAULT_VERSION;
 
-        $this->timeout = $config['timeout'] ?? DEFAULT_TIMEOUT;
+        $this->timeout = $config[REQ_FIELD_TIMEOUT] ?? DEFAULT_TIMEOUT;
 
-        $this->caFile = $config['caFile'] ?? null;
+        $this->caFile = $config[REQ_FIELD_CA_FILE] ?? null;
     }
 
     public function delete(array $params): Response

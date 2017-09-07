@@ -50,7 +50,7 @@ ERROR
             ]
         ];
 
-        switch ($version = $params['version'] ?? $this->version) {
+        switch ($version = $params[REQ_FIELD_VERSION] ?? $this->version) {
         case 1.0:
         case 1.1:
             $reqOpts['http']['protocol_version'] = $version;
@@ -152,7 +152,7 @@ ERROR
 
         if ($params[REQ_FIELD_HEADERS]) {
 
-            $reqOpts['http']['header'] = join(HTTP_EOL, array_map(
+            $reqOpts['http']['header'] = join(PROTOCOL_DELIMITER, array_map(
                 function(string $k, $v) {
                     return "{$k}: $v";
                 },

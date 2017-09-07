@@ -65,7 +65,7 @@ ERROR
             CURLOPT_NOSIGNAL => $timeout <= 1000 ? 1 : 0
         ];
 
-        switch ($version = $params['version'] ?? $this->version) {
+        switch ($version = $params[REQ_FIELD_VERSION] ?? $this->version) {
         case 1.0:
             $reqOpts[CURLOPT_HTTP_VERSION] = CURL_HTTP_VERSION_1_0;
             break;
@@ -220,7 +220,7 @@ ERROR
 
             $fullHeaderLength = $info['header_size'];
 
-            $response->headers = explode(HTTP_SEG_SEPARATOR, substr(
+            $response->headers = explode(SEGMENT_DELIMITER, substr(
                 $response->data,
                 0,
                 $fullHeaderLength - 4

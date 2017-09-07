@@ -1,4 +1,4 @@
-# Interface \\L\\Http\\IClient
+# 接口 \\L\\Http\\IClient
 
 > [返回目录](../index.md)
 
@@ -30,7 +30,7 @@ public function __construct(
  *
  * 如果将此字段设置为 false，则不进行 SSL/TLS 证书和域名校验。
  */
-bool strictSSL = true;
+bool strictSSL = true; // DEFAULT_STRICT_SSL
 
 /**
  * 该字段用于设置 CA 证书集合文件的绝对路径，默认为空，
@@ -43,7 +43,12 @@ string caFile = null;
 /**
  * 该字段用于设置客户端使用的 HTTP 协议版本，默认是 1.1 版本。
  */
-float version = 1.1;
+float version = 1.1; // DEFAULT_VERSION
+
+/**
+ * 该字段用于设置客户端默认的网络超时时间，默认是 30 秒。
+ */
+float timeout = 30; // DEFAULT_TIMEOUT
 ```
 
 ### 1.3. 返回值
@@ -146,7 +151,7 @@ public function request(
      *
      * 如果将此字段设置为 false，则不进行 SSL/TLS 证书和域名校验。
      */
-    bool strictSSL = true;
+    bool strictSSL = true; // DEFAULT_STRICT_SSL
 
     /**
      * 该字段用于设置 CA 证书集合文件的绝对路径，默认使用构造函数中
@@ -161,7 +166,13 @@ public function request(
      * 该字段用于设置客户端使用的 HTTP 协议版本，默认使用构造
      * 函数中设置的版本号。
      */
-    float version = 1.1;
+    float version = 1.1; // DEFAULT_VERSION
+
+    /**
+     * 该字段用于设置请求的网络超时时间，默认使用构造
+     * 函数中设置的网络超时时间。
+     */
+    float timeout = 30; // DEFAULT_TIMEOUT
     ```
 
 ### 2.3. 返回值

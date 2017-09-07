@@ -18,9 +18,9 @@ declare (strict_types=1);
 
 namespace L\Http;
 
-const HTTP_EOL = "\r\n";
+const PROTOCOL_DELIMITER = "\r\n";
 
-const HTTP_SEG_SEPARATOR = "\r\n\r\n";
+const SEGMENT_DELIMITER = "\r\n\r\n";
 
 const AVAILABLE_METHODS = [
     'GET' => 1,
@@ -97,6 +97,7 @@ const REQ_FIELD_GET_DATA = 'getData';
 const REQ_FIELD_GET_HEADERS = 'getHeaders';
 const REQ_FIELD_GET_PROFILE = 'getProfile';
 const REQ_FIELD_TIMEOUT = 'timeout';
+const REQ_FIELD_VERSION = 'version';
 
 const E_LACK_FIELD_URL = 0x0001;
 const E_METHOD_UNSUPPORTED = 0x0002;

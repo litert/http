@@ -5,6 +5,7 @@
 - Added field **timeout** for request for network timeout.
 - Added field **timeout** for IClient, as default value for every request.
 - Added full table of HTTP status code constants.
+- Improved the documents, added constants table.
 
 ## v0.1.4
 

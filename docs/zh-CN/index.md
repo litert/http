@@ -4,6 +4,6 @@
 
 ## 目录
 
-- [Class ClientFactory](./chapters/ClientFactory.md)
-- [Interface IClient](./chapters/IClient.md)
-- [Class Response](./chapters/Response.md)
+- [类 ClientFactory](./chapters/ClientFactory.md)
+- [接口 IClient](./chapters/IClient.md)
+- [类 Response](./chapters/Response.md)

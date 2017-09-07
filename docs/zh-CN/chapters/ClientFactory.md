@@ -1,4 +1,4 @@
-# Class \\L\\Http\\ClientFactory
+# 类 \\L\\Http\\ClientFactory
 
 > [返回目录](../index.md)
 
