@@ -1,5 +1,11 @@
 # Changes Logs
 
+## v0.1.5
+
+- Added field **timeout** for request for network timeout.
+- Added field **timeout** for IClient, as default value for every request.
+- Added full table of HTTP status code constants.
+
 ## v0.1.4
 
 - Fixed: Nothing send when field **data** is a string in CURL client.
@@ -10,7 +16,7 @@
 
 ## v0.1.2
 
-- Fixed: Getting invalid respone when the field **getData** is missed in CURL
+- Fixed: Getting invalid response when the field **getData** is missed in CURL
 client. 
 - Fixed: The default value of field **dataType** in CURL client is missed. 
 

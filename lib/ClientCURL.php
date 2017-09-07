@@ -20,7 +20,7 @@ namespace L\Http;
 
 use L\Core\Exception;
 
-class ClientCURL implements IClient
+class ClientCURL extends AbstractClient
 {
     const METHOD_MAPPING = [
         'GET' => CURLOPT_HTTPGET,
@@ -31,68 +31,6 @@ class ClientCURL implements IClient
         'HEAD' => CURLOPT_CUSTOMREQUEST,
         'OPTIONS' => CURLOPT_CUSTOMREQUEST
     ];
-
-    /**
-     * @var string
-     */
-    public $caFile;
-
-    /**
-     * @var bool
-     */
-    public $strictSSL;
-
-    /**
-     * @var bool
-     */
-    public $version;
-
-    public function __construct(array $config = [])
-    {
-        $this->strictSSL = true;
-
-        $this->version = 1.1;
-
-        foreach ($config as $key => $value) {
-
-            $this->$key = $value;
-        }
-    }
-
-    public function delete(array $params): Response
-    {
-        return $this->request('DELETE', $params);
-    }
-
-    public function get(array $params): Response
-    {
-        return $this->request('GET', $params);
-    }
-
-    public function head(array $params): Response
-    {
-        return $this->request('HEAD', $params);
-    }
-
-    public function options(array $params): Response
-    {
-        return $this->request('OPTIONS', $params);
-    }
-
-    public function patch(array $params): Response
-    {
-        return $this->request('PATCH', $params);
-    }
-
-    public function post(array $params): Response
-    {
-        return $this->request('POST', $params);
-    }
-
-    public function put(array $params): Response
-    {
-        return $this->request('PUT', $params);
-    }
 
     public function request(string $method, array $params): Response
     {
@@ -114,12 +52,17 @@ ERROR
 
         $ch = curl_init();
 
+        $timeout = ($params[REQ_FIELD_TIMEOUT] ?? $this->timeout) * 1000;
+
         $reqOpts = [
             CURLOPT_URL => $params[REQ_FIELD_URL],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER => intval($params[REQ_FIELD_GET_HEADERS] ?? false),
             CURLOPT_NOBODY => intval(!($params[REQ_FIELD_GET_DATA] ?? true)),
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_TIMEOUT_MS => $timeout,
+            CURLOPT_CONNECTTIMEOUT_MS => $timeout,
+            CURLOPT_NOSIGNAL => $timeout <= 1000 ? 1 : 0
         ];
 
         switch ($version = $params['version'] ?? $this->version) {
@@ -251,20 +194,31 @@ ERROR
 
         curl_setopt_array($ch, $reqOpts);
 
+        unset($reqOpts);
+
         $response = new Response();
 
         $response->data = curl_exec($ch);
 
-        unset($reqOpts);
+        $info = curl_getinfo($ch);
+
+        curl_close($ch);
+
+        $response->code = $info['http_code'];
 
         if ($response->data === false) {
+
+            if ($response->code === 0) {
+
+                throw new Exception('Request timeout.', E_TIMEOUT);
+            }
 
             throw new Exception(curl_error($ch), E_REQUEST_FAILURE);
         }
 
         if ($params[REQ_FIELD_GET_HEADERS] ?? false) {
 
-            $fullHeaderLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $fullHeaderLength = $info['header_size'];
 
             $response->headers = explode(HTTP_SEG_SEPARATOR, substr(
                 $response->data,
@@ -295,16 +249,8 @@ ERROR
 
         if ($params[REQ_FIELD_GET_PROFILE] ?? false) {
 
-            $info = curl_getinfo($ch);
-            $response->code = $info['http_code'];
             $response->profile = $info;
         }
-        else {
-
-            $response->code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        }
-
-        curl_close($ch);
 
         return $response;
     }

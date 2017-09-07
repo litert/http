@@ -20,70 +20,8 @@ namespace L\Http;
 
 use L\Core\Exception;
 
-class ClientFileGet implements IClient
+class ClientFileGet extends AbstractClient
 {
-    /**
-     * @var string
-     */
-    public $caFile;
-
-    /**
-     * @var bool
-     */
-    public $strictSSL;
-
-    /**
-     * @var bool
-     */
-    public $version;
-
-    public function __construct(array $config = [])
-    {
-        $this->strictSSL = true;
-
-        $this->version = 1.1;
-
-        foreach ($config as $key => $value) {
-
-            $this->$key = $value;
-        }
-    }
-
-    public function delete(array $params): Response
-    {
-        return $this->request('DELETE', $params);
-    }
-
-    public function get(array $params): Response
-    {
-        return $this->request('GET', $params);
-    }
-
-    public function head(array $params): Response
-    {
-        return $this->request('HEAD', $params);
-    }
-
-    public function options(array $params): Response
-    {
-        return $this->request('OPTIONS', $params);
-    }
-
-    public function patch(array $params): Response
-    {
-        return $this->request('PATCH', $params);
-    }
-
-    public function post(array $params): Response
-    {
-        return $this->request('POST', $params);
-    }
-
-    public function put(array $params): Response
-    {
-        return $this->request('PUT', $params);
-    }
-
     public function request(string $method, array $params): Response
     {
         if (!isset($params[REQ_FIELD_URL])) {
@@ -102,10 +40,13 @@ ERROR
             , E_METHOD_UNSUPPORTED);
         }
 
+        $timeout = $params[REQ_FIELD_TIMEOUT] ?? $this->timeout;
+
         $reqOpts = [
             'http' => [
                 'method' => $method,
-                'ignore_errors' => true
+                'ignore_errors' => true,
+                'timeout' => $timeout
             ]
         ];
 
@@ -222,6 +163,8 @@ ERROR
 
         $response = new Response();
 
+        $startTime = microtime(true);
+
         $response->data = @file_get_contents(
             $params[REQ_FIELD_URL],
             false,
@@ -229,6 +172,14 @@ ERROR
         );
 
         if (!$response->data) {
+
+            if (microtime(true) - $startTime >= $timeout) {
+
+                throw new Exception(
+                    'Request timeout.',
+                    E_TIMEOUT
+                );
+            }
 
             if (!$http_response_header) {
 

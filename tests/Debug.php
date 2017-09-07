@@ -26,14 +26,15 @@ INFO;
 
         echo json_encode($client->get([
 
-            'url' => 'https://fenying.net/',
+            'url' => 'http://www.fakeresponse.com/api/?sleep=2',
             'getHeaders' => true,
             'getData' => true,
             'getProfile' => false,
             'headers' => [
                 'MY-TEST' => 'hello',
             ],
-            'caFile' => __DIR__ . '/cacert.pem'
+           'timeout' => 3,
+           // 'caFile' => __DIR__ . '/cacert.pem'
 
         ]), JSON_PRETTY_PRINT);
 

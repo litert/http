@@ -22,11 +22,18 @@ interface IClient
      * IClient constructor.
      *
      * @param array $configs
-     *   Accepts following configuration items:
+     *     Accepts following configuration items:
      *
-     *     string caFile   Specify the path to CA bundle file.
+     * -   string caFile   Specify the path to CA bundle file.
      *
-     *     bool strictSSL  Specify the strict checking for SSL/TLS.
+     * -   bool strictSSL  Specify the strict checking for SSL/TLS.
+     *
+     * -   float timeout   Specify the seconds for network timeout.
+     *
+     * -   float version   Specify the version of HTTP protocol.
+     *
+     *     The above fields will be the default value of each request by this
+     *   client.
      */
     public function __construct(
         array $configs = []
