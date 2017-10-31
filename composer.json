@@ -4,13 +4,16 @@
     "type" : "library",
     "license" : "Apache-2.0",
     "minimum-stability": "stable",
-    "version": "0.1.5",
+    "version": "0.2.0-a1",
     "autoload" : {
         "psr-4" : {
-            "L\\Http\\" : "lib"
+            "L\\Http\\" : "lib",
+            "L\\Http\\Client\\" : "lib/clients",
+            "L\\Http\\Server\\" : "lib/servers"
         },
         "files": [
-            "lib/Constants.php"
+            "lib/Constants.php",
+            "lib/Errors.php"
         ]
     },
     "homepage" : "https://fenying.net",
@@ -26,7 +29,9 @@
     }],
     "require": {
         "php": ">=7.0.0",
-        "litert/core": "^0.1.0"
+        "litert/core": "^0.1.0",
+        "litert/delay-initializer": "^0.2.0",
+        "litert/annotation": "^0.1.0"
     },
     "authors" : [{
         "name" : "Angus.Fenying",
@@ -35,7 +40,7 @@
         "role" : "Master"
     }],
     "keywords" : [
-        "http", "https", "protocol", "client"
+        "http", "server", "protocol", "client"
     ],
     "extra": {
         "branch-alias": {

@@ -1,5 +1,9 @@
 # Changes Logs
 
+## v0.2.0-a1
+
+- Added HTTP server supports.
+
 ## v0.1.5
 
 - Added field **timeout** for request for network timeout.

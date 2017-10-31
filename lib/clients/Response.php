@@ -14,9 +14,9 @@
    +----------------------------------------------------------------------+
  */
 
-declare (strict_types=1);
+declare (strict_types = 1);
 
-namespace L\Http;
+namespace L\Http\Client;
 
 class Response
 {

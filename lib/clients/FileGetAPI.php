@@ -16,31 +16,31 @@
 
 declare (strict_types = 1);
 
-namespace L\Http;
+namespace L\Http\Client;
 
-use L\Core\Exception;
+use L\Http as http, L\Http\Errors as errors;
 
-class ClientFileGet extends AbstractClient
+class FileGetAPI extends AbstractClient
 {
     public function request(string $method, array $params): Response
     {
-        if (!isset($params[REQ_FIELD_URL])) {
+        if (!isset($params[http\REQ_FIELD_URL])) {
 
             throw new Exception(<<<'ERROR'
 Parameter "url" is required.
 ERROR
-            , E_LACK_FIELD_URL);
+            , errors\C_LACK_FIELD_URL);
         }
 
-        if (empty(AVAILABLE_METHODS[$method])) {
+        if (empty(http\CLIENT_AVAILABLE_METHODS[$method])) {
 
             throw new Exception(<<<ERROR
 Method "{$method}" is not supported, please specify an upper-case method name.
 ERROR
-            , E_METHOD_UNSUPPORTED);
+            , errors\C_METHOD_UNSUPPORTED);
         }
 
-        $timeout = $params[REQ_FIELD_TIMEOUT] ?? $this->timeout;
+        $timeout = $params[http\REQ_FIELD_TIMEOUT] ?? $this->timeout;
 
         $reqOpts = [
             'http' => [
@@ -50,7 +50,7 @@ ERROR
             ]
         ];
 
-        switch ($version = $params[REQ_FIELD_VERSION] ?? $this->version) {
+        switch ($version = $params[http\REQ_FIELD_VERSION] ?? $this->version) {
         case 1.0:
         case 1.1:
             $reqOpts['http']['protocol_version'] = $version;
@@ -60,21 +60,21 @@ ERROR
             throw new Exception(<<<ERROR
 Version "{$version}" of HTTP protocol is not supported yet.
 ERROR
-            , E_VERSION_UNSUPPORTED);
+            , errors\C_VERSION_UNSUPPORTED);
         }
 
-        $isHTTPS = substr($params[REQ_FIELD_URL], 0, 5) === 'https';
+        $isHTTPS = substr($params[http\REQ_FIELD_URL], 0, 5) === 'https';
 
         if ($isHTTPS) {
 
-            if ($params[REQ_FIELD_STRICT_SSL] ?? $this->strictSSL) {
+            if ($params[http\REQ_FIELD_STRICT_SSL] ?? $this->strictSSL) {
 
                 $reqOpts['ssl'] = [
                     'verify_peer' => true,
                     'verify_peer_name' => true
                 ];
 
-                if ($caFile = $params[REQ_FIELD_CA_FILE] ?? $this->caFile) {
+                if ($caFile = $params[http\REQ_FIELD_CA_FILE] ?? $this->caFile) {
 
                     $reqOpts['ssl']['cafile'] = $caFile;
                 }
@@ -88,49 +88,49 @@ ERROR
             }
         }
 
-        if (is_array($params[REQ_FIELD_HEADERS] ?? false)) {
+        if (is_array($params[http\REQ_FIELD_HEADERS] ?? false)) {
 
-            $params[REQ_FIELD_HEADERS] = array_combine(
+            $params[http\REQ_FIELD_HEADERS] = array_combine(
                 array_map(
                     'strtolower',
-                    array_keys($params[REQ_FIELD_HEADERS])
+                    array_keys($params[http\REQ_FIELD_HEADERS])
                 ),
-                array_values($params[REQ_FIELD_HEADERS])
+                array_values($params[http\REQ_FIELD_HEADERS])
             );
         }
         else {
 
-            $params[REQ_FIELD_HEADERS] = [];
+            $params[http\REQ_FIELD_HEADERS] = [];
         }
 
-        if (METHOD_CONTENT_SUPPORTS[$method]) {
+        if (http\METHOD_CONTENT_SUPPORTS[$method]) {
 
             /**
              * Only PATCH/POST/PUT methods supports (and requires) "data"
              * parameter.
              */
-            if (empty($params[REQ_FIELD_DATA])) {
+            if (empty($params[http\REQ_FIELD_DATA])) {
 
                 throw new Exception(<<<ERROR
 Parameter "data" is required for method "{$method}".
 ERROR
-                , E_LACK_FIELD_DATA);
+                , errors\C_LACK_FIELD_DATA);
             }
 
-            if (is_array($params[REQ_FIELD_DATA])) {
+            if (is_array($params[http\REQ_FIELD_DATA])) {
 
-                switch ($params[REQ_FIELD_DATA_TYPE] ?? 'form') {
+                switch ($params[http\REQ_FIELD_DATA_TYPE] ?? 'form') {
                 case 'json':
-                    $dataType = JSON_CONTENT_TYPE;
-                    $params[REQ_FIELD_DATA] = json_encode(
-                        $params[REQ_FIELD_DATA],
+                    $dataType = http\JSON_CONTENT_TYPE;
+                    $params[http\REQ_FIELD_DATA] = json_encode(
+                        $params[http\REQ_FIELD_DATA],
                         JSON_UNESCAPED_UNICODE
                     );
                     break;
                 case 'form':
-                    $dataType = DEFAULT_DATA_CONTENT_TYPE;
-                    $params[REQ_FIELD_DATA] = http_build_query(
-                        $params[REQ_FIELD_DATA],
+                    $dataType = http\DEFAULT_DATA_CONTENT_TYPE;
+                    $params[http\REQ_FIELD_DATA] = http_build_query(
+                        $params[http\REQ_FIELD_DATA],
                         '',
                         '&',
                         PHP_QUERY_RFC3986
@@ -139,25 +139,25 @@ ERROR
                 default:
 
                     throw new Exception(<<<ERROR
-Unsupported type "{$params[REQ_FIELD_DATA_TYPE]}" of data.
+Unsupported type "{$params[http\REQ_FIELD_DATA_TYPE]}" of data.
 ERROR
-                    , E_INVALID_DATA_TYPE);
+                    , errors\C_INVALID_DATA_TYPE);
                 }
 
-                $params[REQ_FIELD_HEADERS]['content-type'] = $dataType;
+                $params[http\REQ_FIELD_HEADERS]['content-type'] = $dataType;
             }
 
-            $reqOpts['http']['content'] = $params[REQ_FIELD_DATA];
+            $reqOpts['http']['content'] = $params[http\REQ_FIELD_DATA];
         }
 
-        if ($params[REQ_FIELD_HEADERS]) {
+        if ($params[http\REQ_FIELD_HEADERS]) {
 
-            $reqOpts['http']['header'] = join(PROTOCOL_DELIMITER, array_map(
+            $reqOpts['http']['header'] = join(http\PROTOCOL_DELIMITER, array_map(
                 function(string $k, $v) {
                     return "{$k}: $v";
                 },
-                array_keys($params[REQ_FIELD_HEADERS]),
-                array_values($params[REQ_FIELD_HEADERS])
+                array_keys($params[http\REQ_FIELD_HEADERS]),
+                array_values($params[http\REQ_FIELD_HEADERS])
             ));
         }
 
@@ -166,7 +166,7 @@ ERROR
         $startTime = microtime(true);
 
         $response->data = @file_get_contents(
-            $params[REQ_FIELD_URL],
+            $params[http\REQ_FIELD_URL],
             false,
             stream_context_create($reqOpts)
         );
@@ -177,7 +177,7 @@ ERROR
 
                 throw new Exception(
                     'Request timeout.',
-                    E_TIMEOUT
+                    errors\C_TIMEOUT
                 );
             }
 
@@ -185,14 +185,14 @@ ERROR
 
                 throw new Exception(
                     'Failed to get response from server.',
-                    E_REQUEST_FAILURE
+                    errors\C_REQUEST_FAILURE
                 );
             }
 
             $response->data = '';
         }
 
-        if ($params[REQ_FIELD_GET_HEADERS] ?? false) {
+        if ($params[http\REQ_FIELD_GET_HEADERS] ?? false) {
 
             $response->headers = HeaderParser::parseHeaderArray($http_response_header);
         }

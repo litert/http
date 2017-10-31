@@ -14,7 +14,11 @@
    +----------------------------------------------------------------------+
  */
 
+declare (strict_types = 1);
+
 namespace L\Http;
+
+use L\Http\Client\Response;
 
 interface IClient
 {

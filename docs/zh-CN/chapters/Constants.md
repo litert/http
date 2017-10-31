@@ -26,9 +26,9 @@ const SEGMENT_DELIMITER = "\r\n\r\n";
 
 ```php
 /**
- * LiteRT/HTTP 库中支持的 HTTP 方法。
+ * LiteRT/HTTP 库中客户端支持的 HTTP 方法。
  */
-const AVAILABLE_METHODS = [
+const CLIENT_AVAILABLE_METHODS = [
     'GET' => 1,
     'POST' => 1,
     'DELETE' => 1,

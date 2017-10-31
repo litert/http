@@ -14,9 +14,11 @@
    +----------------------------------------------------------------------+
  */
 
-declare (strict_types=1);
+declare (strict_types = 1);
 
-namespace L\Http;
+namespace L\Http\Client;
+
+use L\Http as http;
 
 class HeaderParser
 {
@@ -31,7 +33,7 @@ class HeaderParser
 
             $finalHeader = self::parseHeaderArray(
                 explode(
-                    PROTOCOL_DELIMITER,
+                    http\PROTOCOL_DELIMITER,
                     array_splice(
                         $headers,
                         -1
@@ -43,7 +45,7 @@ class HeaderParser
 
                 $redirectHeaders[] = self::parseHeaderArray(
                     explode(
-                        PROTOCOL_DELIMITER,
+                        http\PROTOCOL_DELIMITER,
                         $redirection
                     )
                 );
@@ -53,7 +55,7 @@ class HeaderParser
 
             $finalHeader = self::parseHeaderArray(
                 explode(
-                    PROTOCOL_DELIMITER,
+                    http\PROTOCOL_DELIMITER,
                     $headers[0]
                 )
             );

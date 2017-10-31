@@ -16,37 +16,68 @@
 
 declare (strict_types = 1);
 
-namespace L\Http;
+namespace L\Http\Server;
 
-class ClientFactory
+/**
+ * Class Request
+ *
+ * @package litert/http
+ *
+ * @property string[] $headers
+ */
+class Request
 {
-    public static function detectCACerts(): bool
+    use \L\Kits\DelayInit\TPropertyContainerEx;
+
+    /**
+     * @var string
+     */
+    public $path;
+
+    /**
+     * @var string
+     */
+    public $entryMethod;
+
+    /**
+     * @var string
+     */
+    public $method;
+
+    /**
+     * @var string
+     */
+    public $clientIP;
+
+    /**
+     * @var string[]
+     */
+    public $pathArguments;
+
+    public function __construct()
     {
-        $file = @ini_get('curl.cainfo');
+        $this->_initializeDelayInit();
 
-        if ($file && file_exists($file)) {
+        $this->setInitializer(
+            'headers',
+            'getallheaders'
+        );
+    }
 
-            return true;
+    public function getBodyAsJSON(bool $parse = true)
+    {
+        $data = file_get_contents('php://input');
+
+        if ($data !== '') {
+
+            return $parse ? json_decode($data, true) : $data;
         }
 
-        $file = @ini_get('openssl.cafile');
-
-        if ($file && file_exists($file)) {
-
-            return true;
-        }
-
-        return false;
+        return $parse ? null : '';
     }
 
-    public static function createCURLClient(array $params = []): IClient
+    public function getBodyAsForm()
     {
-        return new Client\CURLAPI($params);
+        return $_POST;
     }
-
-    public static function createFileGetClient(array $params = []): IClient
-    {
-        return new Client\FileGetAPI($params);
-    }
-
 }

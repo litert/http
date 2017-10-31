@@ -14,7 +14,7 @@
    +----------------------------------------------------------------------+
  */
 
-declare (strict_types=1);
+declare (strict_types = 1);
 
 namespace L\Http;
 
@@ -22,7 +22,7 @@ const PROTOCOL_DELIMITER = "\r\n";
 
 const SEGMENT_DELIMITER = "\r\n\r\n";
 
-const AVAILABLE_METHODS = [
+const CLIENT_AVAILABLE_METHODS = [
     'GET' => 1,
     'POST' => 1,
     'DELETE' => 1,
@@ -98,12 +98,3 @@ const REQ_FIELD_GET_HEADERS = 'getHeaders';
 const REQ_FIELD_GET_PROFILE = 'getProfile';
 const REQ_FIELD_TIMEOUT = 'timeout';
 const REQ_FIELD_VERSION = 'version';
-
-const E_LACK_FIELD_URL = 0x0001;
-const E_METHOD_UNSUPPORTED = 0x0002;
-const E_LACK_FIELD_DATA = 0x0003;
-const E_INVALID_DATA_TYPE = 0x0004;
-const E_REQUEST_FAILURE = 0x0005;
-const E_VERSION_UNSUPPORTED = 0x0006;
-const E_TIMEOUT = 0x0007;
-

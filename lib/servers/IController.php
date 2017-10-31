@@ -16,37 +16,16 @@
 
 declare (strict_types = 1);
 
-namespace L\Http;
+namespace L\Http\Server;
 
-class ClientFactory
+/**
+ * Interface IController
+ *
+ * @package litert/http
+ */
+interface IController
 {
-    public static function detectCACerts(): bool
-    {
-        $file = @ini_get('curl.cainfo');
+    public function __construct(Context $context);
 
-        if ($file && file_exists($file)) {
-
-            return true;
-        }
-
-        $file = @ini_get('openssl.cafile');
-
-        if ($file && file_exists($file)) {
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public static function createCURLClient(array $params = []): IClient
-    {
-        return new Client\CURLAPI($params);
-    }
-
-    public static function createFileGetClient(array $params = []): IClient
-    {
-        return new Client\FileGetAPI($params);
-    }
-
+    public static function autoRoute(IRouter $router);
 }

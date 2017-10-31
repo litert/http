@@ -1,5 +1,6 @@
+#!env php
 <?php
-declare (strict_types=1);
+declare (strict_types = 1);
 
 namespace L\Test;
 
@@ -22,7 +23,7 @@ INFO;
 
         }
 
-        $client = ClientFactory::createFileGetClient();
+        $client = ClientFactory::createCURLClient();
 
         echo json_encode($client->get([
 
