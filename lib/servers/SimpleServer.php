@@ -18,21 +18,27 @@ declare (strict_types = 1);
 
 namespace L\Http\Server;
 
-use L\Http\IServer;
-
-class Server implements IServer
+class SimpleServer implements IServer
 {
     /**
-     * @var Context
+     * @var IContext
      */
     protected $context;
 
-    public function __construct(Context $context)
+    public function __construct(IContext $context)
     {
         $this->context = $context;
-    }
 
-    public function handle(string $path = null)
+        $this->context->setInitializer(
+            'response',
+            function() {
+
+                return $this->context->factory->createResponse();
+            }
+        );
+    }
+    
+    protected function _validatePath(string $path = null)
     {
         if ($path === null) {
 
@@ -50,25 +56,40 @@ class Server implements IServer
             }
         }
 
-        if (strlen($path) > 1 && $path[-1] === '/') {
+        if (strlen($path) > 1 &&
+            $path[-1] === '/'
+        ) {
 
-            $path = substr($path, 0, -1);
+            $path = substr(
+                $path,
+                0,
+                -1
+            );
         }
+
+        $this->context->requestPath = $path;
+    }
+
+    public function handle(string $path = null)
+    {
+        $ctx = $this->context;
+
+        $this->_validatePath($path);
 
         $result = $this->context->router->route(
             $_SERVER['REQUEST_METHOD'],
-            $path
+            $ctx->requestPath
         );
 
-        $this->context->setInitializer(
+        $ctx->setInitializer(
             'request',
-            function() use ($path, $result) {
+            function() use ($result) {
 
-                $req = new Request();
+                $req = $this->context->factory->createRequest();
 
                 $req->method = $_SERVER['REQUEST_METHOD'];
                 $req->clientIP = $_SERVER['REMOTE_ADDR'];
-                $req->path = $path;
+                $req->path = $this->context->requestPath;
                 $req->pathArguments = $result['args'];
                 $req->entryMethod = $result['entry'];
 
@@ -76,15 +97,7 @@ class Server implements IServer
             }
         );
 
-        $this->context->setInitializer(
-            'response',
-            function() {
-
-                return new Response();
-            }
-        );
-
-        $controller = new $result['controller']($this->context);
+        $controller = new $result['controller']($ctx);
 
         try {
 
@@ -92,7 +105,10 @@ class Server implements IServer
 
                 foreach ($result['hooks']['before-request'] as $hook) {
 
-                    $controller->$hook(...$result['args']);
+                    if (false === $controller->{$hook['method']}($hook['data'])) {
+
+                        return;
+                    }
                 }
             }
 
@@ -102,18 +118,28 @@ class Server implements IServer
 
                 foreach ($result['hooks']['after-request'] as $hook) {
 
-                    $controller->$hook(...$result['args']);
+                    if (false === $controller->{$hook['method']}($hook['data'])) {
+
+                        return;
+                    }
                 }
             }
         }
-        catch (\Exception $e) {
+        catch (\Throwable $e) {
 
             if (isset($result['hooks']['error'])) {
 
                 foreach ($result['hooks']['error'] as $hook) {
 
-                    $controller->$hook($e);
+                    if (false === $controller->$hook($e)) {
+
+                        return;
+                    }
                 }
+            }
+            else {
+
+                throw $e;
             }
         }
     }

@@ -18,13 +18,44 @@ declare (strict_types = 1);
 
 namespace L\Http\Server;
 
-use L\Kits\DelayInit\PropertyDIContainer;
-
-/**
- * @property IRouter $router
- * @property Request $request
- * @property Response $response
- */
-class Context extends PropertyDIContainer
+interface IFactory
 {
+    /**
+     * Create a router object.
+     *
+     * @return IRouter
+     */
+    public function createRouter(): IRouter;
+
+    /**
+     * Create a HTTP context object.
+     *
+     * @return IContext
+     */
+    public function createContext(): IContext;
+
+    /**
+     * Create a HTTP server controlling object.
+     *
+     * @param IContext $ctx
+     *
+     * @return IServer
+     */
+    public function createServer(
+        IContext $ctx
+    ): IServer;
+
+    /**
+     * Create a HTTP request controlling object.
+     *
+     * @return IRequest
+     */
+    public function createRequest(): IRequest;
+
+    /**
+     * Create a HTTP response controlling object.
+     *
+     * @return IResponse
+     */
+    public function createResponse(): IResponse;
 }

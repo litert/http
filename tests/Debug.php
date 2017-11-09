@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace L\Test;
 
-use L\Http\ClientFactory;
+use L\Http\Client\Factory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -14,7 +14,7 @@ class Debug
     {
         ini_set('display_errors', 'on');
         error_reporting(E_ALL);
-        if (ClientFactory::detectCACerts()) {
+        if (Factory::detectCACerts()) {
 
             echo <<<INFO
 SSL/TLS CA certificates bundle file is detected.
@@ -23,7 +23,7 @@ INFO;
 
         }
 
-        $client = ClientFactory::createCURLClient();
+        $client = Factory::createFileGetClient();
 
         echo json_encode($client->get([
 

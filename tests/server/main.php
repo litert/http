@@ -1,18 +1,37 @@
 <?php
 declare (strict_types = 1);
 
-define('DEBUG', 0);
+define('DEBUG', 1);
 
 require 'autoload.php';
 
-use L\HTTP\ServerFactory;
+use L\Http\Server\SimpleFactory;
 
-$router = require ('router.php');
+(function() {
 
-$context = ServerFactory::createContext();
+    header('Content-Type: text/plain');
+    error_reporting(E_ALL);
+    ini_set('display_errors', 'off');
 
-$context->router = $router;
+    \L\Core\boot();
 
-$server = ServerFactory::createServer($context);
+    \L\Core\EventBus::getInstance()->on('error', function($error) {
 
-$server->handle();
+        print_r($error);
+    });
+
+    $serverFactory = new SimpleFactory();
+
+    $createRouter = require ('router.php');
+
+    $router = $createRouter($serverFactory);
+
+    $context = $serverFactory->createContext();
+
+    $context->router = $router;
+
+    $server = $serverFactory->createServer($context);
+
+    $server->handle();
+
+})();

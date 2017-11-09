@@ -4,8 +4,14 @@ declare (strict_types = 1);
 namespace Test\Server\Controller;
 
 /**
- * @http.get(path = "/", entry = "main")
- * @http.hook(type = after-request, handler = afterRequestHandler)
+ * @http.get(
+ *   path = "/",
+ *   entry = "main"
+ * )
+ * @http.hook(
+ *   type = after-request,
+ *   handler = afterRequestHandler
+ * )
  */
 class Index extends BaseController
 {
@@ -38,6 +44,7 @@ class Index extends BaseController
 
         $this->response->writeLine("Visiting '{$this->request->path}'.");
         $this->response->writeLine('Hello world');
+        $this->response->flushBuffer();
     }
 
     public function afterRequestHandler()

@@ -16,11 +16,15 @@
 
 declare (strict_types = 1);
 
-namespace L\Http;
+namespace L\Http\Server;
 
-interface IServer
+use L\Kits\DelayInit\PropertyDIContainer;
+
+class SimpleContext extends PropertyDIContainer implements IContext
 {
-    public function __construct(Server\Context $context);
-
-    public function handle(string $uri = null);
+    public function __construct(IFactory $factory)
+    {
+        parent::__construct();
+        $this->factory = $factory;
+    }
 }

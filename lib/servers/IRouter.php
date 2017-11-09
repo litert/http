@@ -79,7 +79,11 @@ interface IRouter
      *
      * @return void
      */
-    public function get(string $uri, $controller, string $entry = 'main');
+    public function get(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    );
 
     /**
      * Register a POST request handler.
@@ -90,7 +94,11 @@ interface IRouter
      *
      * @return void
      */
-    public function post(string $uri, $controller, string $entry = 'main');
+    public function post(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    );
 
     /**
      * Register a PUT request handler.
@@ -101,7 +109,11 @@ interface IRouter
      *
      * @return void
      */
-    public function put(string $uri, $controller, string $entry = 'main');
+    public function put(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    );
 
     /**
      * Register a PATCH request handler.
@@ -112,7 +124,11 @@ interface IRouter
      *
      * @return void
      */
-    public function patch(string $uri, $controller, string $entry = 'main');
+    public function patch(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    );
 
     /**
      * Register a OPTIONS request handler.
@@ -123,7 +139,11 @@ interface IRouter
      *
      * @return void
      */
-    public function options(string $uri, $controller, string $entry = 'main');
+    public function options(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    );
 
     /**
      * Register a HEAD request handler.
@@ -134,7 +154,11 @@ interface IRouter
      *
      * @return void
      */
-    public function head(string $uri, $controller, string $entry = 'main');
+    public function head(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    );
 
     /**
      * Register a DELETE request handler.
@@ -145,7 +169,11 @@ interface IRouter
      *
      * @return void
      */
-    public function delete(string $uri, $controller, string $entry = 'main');
+    public function delete(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    );
 
     /**
      * Register a hook handler.
@@ -153,12 +181,16 @@ interface IRouter
      * @param string $type
      * @param $controller
      * @param string $handler
+     * @param string $method
+     * @param array $data
      *
      * @return void
      */
     public function hook(
         string $type,
         $controller,
-        string $handler
+        string $handler,
+        string $method = IServer::DEFAULT_ENTRY_METHOD,
+        array $data = []
     );
 }

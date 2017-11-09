@@ -1,5 +1,9 @@
 # Changes Logs
 
+## v0.2.0-a2
+
+- Added annotation supports for controller.
+
 ## v0.2.0-a1
 
 - Added HTTP server supports.

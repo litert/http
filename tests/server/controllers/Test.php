@@ -3,17 +3,23 @@ declare (strict_types = 1);
 
 namespace Test\Server\Controller;
 
-use L\Http\Server\IRouter;
-use L\Http\Server as server;
-
 /**
  * Class TestHandler
  *
  * @package litert/http
  *
- * @http.get(path="/test")
+ * @http.get("/test")
+ *
+ * @user.requireLogin(false)
+ *
+ * @user.verifyPrivileges(
+ *   create_user,
+ *   delete_user,
+ *   watch_video,
+ *   login
+ * )
  */
-class Test extends server\AbstractController
+class Test extends BaseController
 {
     public function main()
     {

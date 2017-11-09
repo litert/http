@@ -16,41 +16,36 @@
 
 declare (strict_types = 1);
 
-namespace L\Http;
+namespace L\Http\Client;
 
-class ServerFactory
+class Factory
 {
-    /**
-     * Create a simple router object.
-     *
-     * @return Server\IRouter
-     */
-    public static function createRouter(): Server\IRouter
+    public static function detectCACerts(): bool
     {
-        return new Server\Router();
+        $file = @ini_get('curl.cainfo');
+
+        if ($file && file_exists($file)) {
+
+            return true;
+        }
+
+        $file = @ini_get('openssl.cafile');
+
+        if ($file && file_exists($file)) {
+
+            return true;
+        }
+
+        return false;
     }
 
-    /**
-     * Create a HTTP context object.
-     *
-     * @return Server\Context
-     */
-    public static function createContext(): Server\Context
+    public static function createCURLClient(array $params = []): IClient
     {
-        return new Server\Context();
+        return new CURLAPI($params);
     }
 
-    /**
-     * Create a HTTP server controlling object.
-     *
-     * @param Server\Context $ctx
-     *
-     * @return IServer
-     */
-    public static function createServer(
-        Server\Context $ctx
-    ): IServer
+    public static function createFileGetClient(array $params = []): IClient
     {
-        return new Server\Server($ctx);
+        return new FileGetAPI($params);
     }
 }

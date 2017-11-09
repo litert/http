@@ -1,30 +1,39 @@
 <?php
 declare (strict_types = 1);
 
-$router = \L\Http\ServerFactory::createRouter();
+return function(\L\Http\Server\IFactory $factory) {
 
-if (DEBUG || !$router->loadedFromCache()) {
+    $router = $factory->createRouter();
 
-    $router->initialize();
+    if (DEBUG) {
 
-    $dir = opendir(__DIR__ . '/controllers');
-
-    while ($file = readdir($dir)) {
-
-        if ($file[0] === '.' || substr($file, -4) !== '.php') {
-
-            continue;
-        }
-
-        call_user_func([
-            'Test\Server\Controller\\' . substr($file, 0, -4),
-            'autoRoute'
-        ], $router);
+        apcu_clear_cache();
     }
 
-    closedir($dir);
+    if (!$router->loadedFromCache()) {
 
-    $router->saveToCache();
-}
+        $router->initialize();
 
-return $router;
+        $dir = opendir(__DIR__ . '/controllers');
+
+        while ($file = readdir($dir)) {
+
+            if ($file[0] === '.' || substr($file, -4) !== '.php') {
+
+                continue;
+            }
+
+            call_user_func([
+                'Test\Server\Controller\\' . substr($file, 0, -4),
+                'autoRoute'
+            ], $router);
+        }
+
+        closedir($dir);
+
+        $router->saveToCache();
+    }
+
+    return $router;
+
+};

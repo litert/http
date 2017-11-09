@@ -18,110 +18,49 @@ declare (strict_types = 1);
 
 namespace L\Http\Server;
 
-/**
- * Class Response
- *
- * @package litert/http
- *
- * @property string[] $headers
- */
-class Response
+interface IResponse
 {
-    /**
-     * Flag to determine whether output is buffering.
-     *
-     * @var bool
-     */
-    protected $_isBuffering = false;
-
     /**
      * Tells if HTTP headers are already sent.
      *
      * @return bool
      */
-    public function isHeaderSent(): bool
-    {
-        static $sent;
+    public function isHeaderSent(): bool;
 
-        if (!$sent) {
-
-            $sent = headers_sent();
-        }
-
-        return $sent;
-    }
     /**
      * Start buffering the output data.
      */
-    public function startBuffer()
-    {
-        if ($this->_isBuffering) {
-
-            return;
-        }
-
-        $this->_isBuffering = true;
-        ob_start();
-    }
+    public function startBuffer();
 
     /**
      * Send the buffered output data to clients, empty the buffer, and then
      * stop buffering.
      */
-    public function endBuffer()
-    {
-        if ($this->_isBuffering) {
-
-            $this->_isBuffering = false;
-            ob_end_flush();
-            flush();
-        }
-    }
+    public function endBuffer();
 
     /**
      * Empty the output buffer, without sending to clients.
      */
-    public function cleanOutputBuffer()
-    {
-        if ($this->_isBuffering) {
-
-            $this->_isBuffering = false;
-            ob_end_clean();
-        }
-    }
+    public function cleanOutputBuffer();
 
     /**
      * Get the buffered output data.
      *
      * @return string
      */
-    public function getBuffer()
-    {
-        return $this->_isBuffering ? ob_get_contents() : null;
-    }
+    public function getBuffer();
 
     /**
      * Send the buffered output data to clients, and empty the buffer.
      */
-    public function flushBuffer()
-    {
-        if ($this->_isBuffering) {
-
-            ob_end_flush();
-            flush();
-            ob_start();
-        }
-    }
+    public function flushBuffer();
 
     /**
      * Tell if the output data is being buffered.
      *
      * @return bool
      */
-    public function isBuffering(): bool
-    {
-        return $this->_isBuffering;
-    }
+    public function isBuffering(): bool;
 
     /**
      * Send a piece of HTTP header to client.
@@ -129,32 +68,20 @@ class Response
      * @param string $key
      * @param string $value
      */
-    public function writeHeader(string $key, string $value)
-    {
-        header("{$key}: {$value}");
-    }
+    public function writeHeader(string $key, string $value);
 
     /**
      * Send HTTP headers to client.
      *
      * @param string[] $headers
      */
-    public function writeHeaders(array $headers)
-    {
-        foreach ($headers as $key => $value) {
-
-            header("{$key}: {$value}");
-        }
-    }
+    public function writeHeaders(array $headers);
 
     /**
      * @param int $code
      * @param string $message
      */
-    public function setStatusCode(int $code, string $message)
-    {
-        header("HTTP/1.1 {$code} {$message}");
-    }
+    public function setStatusCode(int $code, string $message);
 
     /**
      * Send the data to client.
@@ -163,10 +90,7 @@ class Response
      *
      * @param string $data
      */
-    public function write(string $data)
-    {
-        echo $data;
-    }
+    public function writeLine(string $data);
 
     /**
      * Send a line of data to client.
@@ -175,16 +99,5 @@ class Response
      *
      * @param string $data
      */
-    public function writeLine(string $data)
-    {
-        echo $data, PHP_EOL;
-    }
-
-    /**
-     * Flush buffer when request completed automatically.
-     */
-    public function __destruct()
-    {
-        $this->endBuffer();
-    }
+    public function write(string $data);
 }

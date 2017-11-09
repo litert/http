@@ -20,7 +20,7 @@ namespace L\Http\Client;
 
 use \L\Http as http;
 
-abstract class AbstractClient implements http\IClient
+abstract class AbstractClient implements IClient
 {
     /**
      * @var string

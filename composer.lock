@@ -4,39 +4,36 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d5558bbb3ca601f7111c32dac357c43",
+    "content-hash": "945aefd2a058d93564ef9e103e0d726a",
     "packages": [
         {
             "name": "litert/annotation",
-            "version": "0.1.3",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/litert/annotation.git",
-                "reference": "ce76183e9e2d22a7de0b8fb387fcfbfe4aaa3d79"
+                "reference": "0a0fd01ad88eac887cb2cde2dc89017632b8d47e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/litert/annotation/zipball/ce76183e9e2d22a7de0b8fb387fcfbfe4aaa3d79",
-                "reference": "ce76183e9e2d22a7de0b8fb387fcfbfe4aaa3d79",
+                "url": "https://api.github.com/repos/litert/annotation/zipball/0a0fd01ad88eac887cb2cde2dc89017632b8d47e",
+                "reference": "0a0fd01ad88eac887cb2cde2dc89017632b8d47e",
                 "shasum": ""
             },
             "require": {
-                "litert/core": "^0.1.0",
+                "litert/core": "^0.2.0",
                 "php": ">=7.0.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.1.x-dev"
+                    "dev-master": "0.3.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
                     "L\\Annotation\\": "lib"
-                },
-                "files": [
-                    "lib/Constants.php"
-                ]
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -56,20 +53,20 @@
                 "annotation",
                 "litert"
             ],
-            "time": "2017-10-14T10:32:13+00:00"
+            "time": "2017-11-09T02:24:43+00:00"
         },
         {
             "name": "litert/core",
-            "version": "0.1.1",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/litert/core.git",
-                "reference": "843b8b667537ffd4a653f20db2c93cbf70589292"
+                "reference": "a494f03ef919d67d48c990d03eeac8dfae7c996a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/litert/core/zipball/843b8b667537ffd4a653f20db2c93cbf70589292",
-                "reference": "843b8b667537ffd4a653f20db2c93cbf70589292",
+                "url": "https://api.github.com/repos/litert/core/zipball/a494f03ef919d67d48c990d03eeac8dfae7c996a",
+                "reference": "a494f03ef919d67d48c990d03eeac8dfae7c996a",
                 "shasum": ""
             },
             "require": {
@@ -78,7 +75,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.1.x-dev"
+                    "dev-master": "0.2.x-dev"
                 }
             },
             "autoload": {
@@ -86,8 +83,8 @@
                     "L\\Core\\": "lib"
                 },
                 "files": [
-                    "lib/lang_ext.php",
-                    "lib/errors.php"
+                    "lib/LanguageExtension.php",
+                    "lib/ErrorHandler.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -108,24 +105,24 @@
                 "core",
                 "litert"
             ],
-            "time": "2017-09-29T08:24:23+00:00"
+            "time": "2017-11-08T02:48:24+00:00"
         },
         {
             "name": "litert/delay-initializer",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/litert/delay-initializer.git",
-                "reference": "2a2c6689693e6b6aa216e356986f5e0194409aa8"
+                "reference": "c83bbeb39308d2cd4cc6923da0912d060944a8df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/litert/delay-initializer/zipball/2a2c6689693e6b6aa216e356986f5e0194409aa8",
-                "reference": "2a2c6689693e6b6aa216e356986f5e0194409aa8",
+                "url": "https://api.github.com/repos/litert/delay-initializer/zipball/c83bbeb39308d2cd4cc6923da0912d060944a8df",
+                "reference": "c83bbeb39308d2cd4cc6923da0912d060944a8df",
                 "shasum": ""
             },
             "require": {
-                "litert/core": "^0.1.1",
+                "litert/core": "^0.2.0",
                 "php": ">=7.0.0"
             },
             "type": "library",
@@ -137,10 +134,7 @@
             "autoload": {
                 "psr-4": {
                     "L\\Kits\\DelayInit\\": "lib"
-                },
-                "files": [
-                    "lib/Constants.php"
-                ]
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -160,7 +154,7 @@
                 "delay",
                 "initializer"
             ],
-            "time": "2017-10-12T08:16:39+00:00"
+            "time": "2017-11-07T09:41:41+00:00"
         }
     ],
     "packages-dev": [],

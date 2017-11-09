@@ -18,8 +18,6 @@ declare (strict_types = 1);
 
 namespace L\Http\Server;
 
-use L\Http\Errors as errors;
-
 abstract class AbstractRouter implements IRouter
 {
     const ROUTE_TYPE_REGEXP = 0x01;
@@ -161,7 +159,7 @@ abstract class AbstractRouter implements IRouter
 
                     throw new Exception(
                         "Invalid expression '{$type}' for variable type.",
-                        errors\S_INVALID_SMART_VARIABLE_TYPE
+                        Exception::E_INVALID_SMART_VARIABLE_TYPE
                     );
                 }
             },
@@ -174,23 +172,30 @@ abstract class AbstractRouter implements IRouter
     public function hook(
         string $type,
         $controller,
-        string $handler
+        string $handler,
+        string $method = IServer::DEFAULT_ENTRY_METHOD,
+        array $data = []
     )
     {
-        if (empty($this->_hooks[$controller])) {
+        $place = "{$controller}::{$method}";
 
-            $this->_hooks[$controller] = [];
+        if (empty($this->_hooks[$place])) {
+
+            $this->_hooks[$place] = [];
         }
 
-        if (empty($this->_hooks[$controller][$type])) {
+        if (empty($this->_hooks[$place][$type])) {
 
-            $this->_hooks[$controller][$type] = [
-                $handler
+            $this->_hooks[$place][$type] = [
+                ['method' => $handler, 'data' => $data]
             ];
         }
         else {
 
-            $this->_hooks[$controller][$type][] = $handler;
+            $this->_hooks[$place][$type][] = [
+                'method' => $handler,
+                'data' => $data
+            ];
         }
     }
 

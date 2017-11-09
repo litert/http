@@ -18,7 +18,7 @@ declare (strict_types = 1);
 
 namespace L\Http\Server;
 
-class Router extends AbstractRouter
+class SimpleRouter extends AbstractRouter
 {
     const CACHE_KEY = '/lrt/http/server/simple-router';
 
@@ -43,6 +43,8 @@ class Router extends AbstractRouter
     {
         $pathArgs = [];
 
+        $entry = IServer::DEFAULT_ENTRY_METHOD;
+
         if (!is_array($this->_regexpRules[$method] ?? false)) {
 
             $ctrlClass = $this->_events['BAD_METHOD'];
@@ -64,8 +66,10 @@ class Router extends AbstractRouter
 
             switch ($rule['type']) {
             case self::ROUTE_TYPE_REGEXP:
+
                 $matched = preg_match($rule['path'], $path);
                 break;
+
             case self::ROUTE_TYPE_SMART:
 
                 if (!preg_match($rule['path'], $path, $result)) {
@@ -138,8 +142,8 @@ onFinal:
         return [
             'args' => $pathArgs,
             'controller' => $ctrlClass,
-            'entry' => $entry ?? 'main',
-            'hooks' => $this->_hooks[$ctrlClass] ?? []
+            'entry' => $entry,
+            'hooks' => $this->_hooks["{$ctrlClass}::{$entry}"] ?? []
         ];
     }
 
@@ -167,7 +171,10 @@ onFinal:
                 'entry' => $entry
             ];
 
-            list($rule['path'], $rule['placeholders']) = $this->_compileSmartExpr($uri);
+            list(
+                $rule['path'],
+                $rule['placeholders']
+            ) = $this->_compileSmartExpr($uri);
 
             $this->_regexpRules[$method][$uri] = $rule;
         }
@@ -180,7 +187,11 @@ onFinal:
         }
     }
 
-    public function get(string $uri, $controller, string $entry = 'main')
+    public function get(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    )
     {
         $this->_addRule(
             'GET',
@@ -190,7 +201,11 @@ onFinal:
         );
     }
 
-    public function post(string $uri, $controller, string $entry = 'main')
+    public function post(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    )
     {
         $this->_addRule(
             'POST',
@@ -200,7 +215,11 @@ onFinal:
         );
     }
 
-    public function put(string $uri, $controller, string $entry = 'main')
+    public function put(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    )
     {
         $this->_addRule(
             'PUT',
@@ -210,7 +229,11 @@ onFinal:
         );
     }
 
-    public function patch(string $uri, $controller, string $entry = 'main')
+    public function patch(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    )
     {
         $this->_addRule(
             'PATCH',
@@ -220,7 +243,11 @@ onFinal:
         );
     }
 
-    public function options(string $uri, $controller, string $entry = 'main')
+    public function options(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    )
     {
         $this->_addRule(
             'OPTIONS',
@@ -230,7 +257,11 @@ onFinal:
         );
     }
 
-    public function head(string $uri, $controller, string $entry = 'main')
+    public function head(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    )
     {
         $this->_addRule(
             'HEAD',
@@ -240,7 +271,11 @@ onFinal:
         );
     }
 
-    public function delete(string $uri, $controller, string $entry = 'main')
+    public function delete(
+        string $uri,
+        $controller,
+        string $entry = IServer::DEFAULT_ENTRY_METHOD
+    )
     {
         $this->_addRule(
             'DELETE',

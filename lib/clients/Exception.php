@@ -20,4 +20,11 @@ namespace L\Http\Client;
 
 class Exception extends \L\Core\Exception
 {
+    const E_LACK_FIELD_URL = 0x00000001;
+    const E_METHOD_UNSUPPORTED = 0x00000002;
+    const E_LACK_FIELD_DATA = 0x00000003;
+    const E_INVALID_DATA_TYPE = 0x00000004;
+    const E_REQUEST_FAILURE = 0x00000005;
+    const E_VERSION_UNSUPPORTED = 0x00000006;
+    const E_TIMEOUT = 0x00000007;
 }

@@ -18,66 +18,32 @@ declare (strict_types = 1);
 
 namespace L\Http\Server;
 
-/**
- * Class Request
- *
- * @package litert/http
- *
- * @property string[] $headers
- */
-class Request
+class SimpleFactory implements IFactory
 {
-    use \L\Kits\DelayInit\TPropertyContainerEx;
-
-    /**
-     * @var string
-     */
-    public $path;
-
-    /**
-     * @var string
-     */
-    public $entryMethod;
-
-    /**
-     * @var string
-     */
-    public $method;
-
-    /**
-     * @var string
-     */
-    public $clientIP;
-
-    /**
-     * @var string[]
-     */
-    public $pathArguments;
-
-    public function __construct()
+    public function createRouter(): IRouter
     {
-        $this->_initializeDelayInit();
-
-        $this->setInitializer(
-            'headers',
-            'getallheaders'
-        );
+        return new SimpleRouter();
     }
 
-    public function getBodyAsJSON(bool $parse = true)
+    public function createContext(): IContext
     {
-        $data = file_get_contents('php://input');
-
-        if ($data !== '') {
-
-            return $parse ? json_decode($data, true) : $data;
-        }
-
-        return $parse ? null : '';
+        return new SimpleContext($this);
     }
 
-    public function getBodyAsForm()
+    public function createServer(
+        IContext $ctx
+    ): IServer
     {
-        return $_POST;
+        return new SimpleServer($ctx);
+    }
+
+    public function createRequest(): IRequest
+    {
+        return new SimpleRequest();
+    }
+
+    public function createResponse(): IResponse
+    {
+        return new SimpleResponse();
     }
 }

@@ -18,14 +18,68 @@ declare (strict_types = 1);
 
 namespace L\Http\Server;
 
+use \L\Kits\DelayInit\TPropertyContainerEx;
+
 /**
- * Interface IController
+ * Class Request
  *
  * @package litert/http
+ *
+ * @property string[] $headers
  */
-interface IController
+class SimpleRequest implements IRequest
 {
-    public function __construct(IContext $context);
+    use TPropertyContainerEx;
 
-    public static function autoRoute(IRouter $router);
+    /**
+     * @var string
+     */
+    public $path;
+
+    /**
+     * @var string
+     */
+    public $entryMethod;
+
+    /**
+     * @var string
+     */
+    public $method;
+
+    /**
+     * @var string
+     */
+    public $clientIP;
+
+    /**
+     * @var string[]
+     */
+    public $pathArguments;
+
+    public function __construct()
+    {
+        $this->_initializeDelayInit();
+
+        $this->setInitializer(
+            'headers',
+            'getallheaders'
+        );
+    }
+
+    public function getBodyAsJSON(bool $parse = true)
+    {
+        $data = file_get_contents('php://input');
+
+        if ($data !== '') {
+
+            return $parse ? json_decode($data, true) : $data;
+        }
+
+        return $parse ? null : '';
+    }
+
+    public function getBodyAsForm()
+    {
+        return $_POST;
+    }
 }

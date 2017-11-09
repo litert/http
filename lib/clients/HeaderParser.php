@@ -22,7 +22,6 @@ use L\Http as http;
 
 class HeaderParser
 {
-
     public static function parseCURLHeaders(
         array $headers
     ): array

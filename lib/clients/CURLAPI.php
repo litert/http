@@ -18,7 +18,7 @@ declare (strict_types = 1);
 
 namespace L\Http\Client;
 
-use L\Http as http, L\Http\Errors as errors;
+use L\Http as http;
 
 class CURLAPI extends AbstractClient
 {
@@ -39,7 +39,7 @@ class CURLAPI extends AbstractClient
             throw new Exception(<<<'ERROR'
 Parameter "url" is required.
 ERROR
-            , errors\C_LACK_FIELD_URL);
+            , Exception::E_LACK_FIELD_URL);
         }
 
         if (empty(http\CLIENT_AVAILABLE_METHODS[$method])) {
@@ -47,7 +47,7 @@ ERROR
             throw new Exception(<<<ERROR
 Method "{$method}" is not supported, please specify an upper-case method name.
 ERROR
-            , errors\C_METHOD_UNSUPPORTED);
+            , Exception::E_METHOD_UNSUPPORTED);
         }
 
         $ch = curl_init();
@@ -77,7 +77,7 @@ ERROR
             throw new Exception(<<<ERROR
 Version "{$version}" of HTTP protocol is not supported yet.
 ERROR
-            , errors\C_VERSION_UNSUPPORTED);
+            , Exception::E_VERSION_UNSUPPORTED);
         }
 
         $isHTTPS = substr($params[http\REQ_FIELD_URL], 0, 5) === 'https';
@@ -133,7 +133,7 @@ ERROR
                 throw new Exception(<<<ERROR
 Parameter "data" is required for method "{$method}".
 ERROR
-                , errors\C_LACK_FIELD_DATA);
+                , Exception::E_LACK_FIELD_DATA);
             }
 
             if (is_array($params[http\REQ_FIELD_DATA])) {
@@ -160,7 +160,7 @@ ERROR
                     throw new Exception(<<<ERROR
 Unsupported type "{$params[http\REQ_FIELD_DATA_TYPE]}" of data.
 ERROR
-                    , errors\C_INVALID_DATA_TYPE);
+                    , Exception::E_INVALID_DATA_TYPE);
                 }
 
                 $params[http\REQ_FIELD_HEADERS]['content-type'] = $dataType;
@@ -210,10 +210,10 @@ ERROR
 
             if ($response->code === 0) {
 
-                throw new Exception('Request timeout.', errors\C_TIMEOUT);
+                throw new Exception('Request timeout.', Exception::E_TIMEOUT);
             }
 
-            throw new Exception(curl_error($ch), errors\C_REQUEST_FAILURE);
+            throw new Exception(curl_error($ch), Exception::E_REQUEST_FAILURE);
         }
 
         if ($params[http\REQ_FIELD_GET_HEADERS] ?? false) {

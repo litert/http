@@ -18,7 +18,20 @@ declare (strict_types = 1);
 
 namespace L\Http\Server;
 
-class Exception extends \L\Core\Exception
+/**
+ * Interface IRequest
+ * @package L\Http\Server
+ *
+ * @property string $path
+ * @property string[] $headers
+ * @property string $entryMethod
+ * @property string $method
+ * @property string $clientIP
+ * @property string[] $pathArguments
+ */
+interface IRequest
 {
-    const E_INVALID_SMART_VARIABLE_TYPE = 0x0001;
+    public function getBodyAsJSON(bool $parse = true);
+
+    public function getBodyAsForm();
 }

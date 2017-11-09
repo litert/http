@@ -18,7 +18,16 @@ declare (strict_types = 1);
 
 namespace L\Http\Server;
 
-class Exception extends \L\Core\Exception
+use L\Kits\DelayInit\PropertyContainer;
+
+/**
+ * @property IRouter $router
+ * @property IRequest $request
+ * @property IResponse $response
+ * @property IFactory $factory
+ * @property string $requestPath
+ */
+interface IContext extends PropertyContainer
 {
-    const E_INVALID_SMART_VARIABLE_TYPE = 0x0001;
+    public function __construct(IFactory $factory);
 }
